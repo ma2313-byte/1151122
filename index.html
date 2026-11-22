@@ -1,0 +1,2350 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="tool">
+  <meta name="design-style" content="sticker">
+  <title>美味寫作魔法師：文句擴寫五關闖關遊戲</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* 1. Sticker style tokens */
+      --background: #fef7ff;
+      --surface-container-low: #ffffff;
+      --surface-container: #f8eef8;
+      --surface-container-high: #f2e8f2;
+
+      --on-surface: #2e1a28;
+      --on-surface-variant: #604868;
+
+      --outline: #907898;
+      --outline-variant: #dcc8e0;
+
+      --primary: #c2207f;
+      --on-primary: #ffffff;
+      --primary-container: #f080c0;
+      --on-primary-container: #2e1a28;
+      --secondary: #7c52aa;
+      --on-secondary: #ffffff;
+      --secondary-container: #eadcf8;
+      --tertiary: #0096cc;
+      --tertiary-container: #dff4fc;
+      --error: #c53030;
+      --on-error: #ffffff;
+      --error-container: #fde8e8;
+
+      --data-1: #c2207f;
+      --data-2: #7c52aa;
+      --data-3: #0096cc;
+      --data-4: #d96a00;
+      --data-context: #c8b8d0;
+
+      --font-headline: 'Noto Sans TC', 'DM Sans', sans-serif;
+      --font-body: 'Noto Sans TC', 'DM Sans', sans-serif;
+      --font-label: 'Noto Sans TC', 'DM Sans', sans-serif;
+
+      --rounded: 1.25rem;
+      --rounded-lg: 2rem;
+      --rounded-full: 9999px;
+
+      --shadow-pink: 0 4px 16px rgb(224 64 160 / 0.2);
+      --shadow-pink-deep: 0 10px 28px rgb(224 64 160 / 0.32);
+      --shadow-grape: 0 4px 16px rgb(124 82 170 / 0.2);
+      --shadow-grape-deep: 0 10px 28px rgb(124 82 170 / 0.32);
+      --shadow-sky: 0 4px 16px rgb(0 150 204 / 0.2);
+      --shadow-positive: 0 4px 16px rgb(21 127 75 / 0.2);
+      --pop-scale: scale(1.03);
+      --lift: translateY(-4px);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+      /* 3. Shared tokens */
+      --positive: #157f4b;
+      --on-positive: #ffffff;
+      --positive-container: #dcfce7;
+      --warning: #b45309;
+      --warning-container: #fef3c7;
+      --focus: #c2207f;
+
+      --display-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
+      --headline-size: clamp(1.25rem, 1.1rem + 0.65vw, 1.625rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.25rem);
+      --body-size: clamp(1rem, 0.96rem + 0.15vw, 1.0625rem);
+      --label-size: 0.8125rem;
+
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.65;
+    }
+    header { position: static !important; }
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-lg);
+      padding: var(--space-lg);
+      max-width: 1140px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Hero / Header Banner */
+    .hero-panel {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      box-shadow: var(--shadow-pink);
+      padding: var(--space-xl);
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .hero-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: end;
+    }
+
+    .kicker-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      font-weight: 700;
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      width: fit-content;
+      margin-bottom: var(--space-sm);
+    }
+
+    .display {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: var(--display-size);
+      line-height: 1.15;
+      margin: 0 0 var(--space-sm) 0;
+      color: var(--on-surface);
+    }
+    .display em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .hero-subtitle {
+      margin: 0;
+      color: var(--on-surface-variant);
+      max-width: 62ch;
+    }
+
+    .chef-profile-box {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .field-label {
+      display: block;
+      font-weight: 700;
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      margin-bottom: var(--space-xs);
+    }
+
+    .input-row {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: end;
+    }
+
+    .pill-input {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-full);
+      border: 2px solid var(--outline);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .pill-input:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgb(194 32 127 / 0.18);
+    }
+
+    .stats-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+    }
+
+    .progress-block {
+      flex: 1 1 260px;
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: var(--label-size);
+      color: var(--on-surface);
+    }
+
+    .progress-track {
+      height: 16px;
+      background: var(--surface-container-high);
+      border-radius: var(--rounded-full);
+      overflow: hidden;
+      padding: 2px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--tertiary);
+      border-radius: var(--rounded-full);
+      transition: width var(--dur-long) var(--ease-bounce);
+    }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--surface-container-low);
+      box-shadow: var(--shadow-pink);
+      border-radius: var(--rounded-full);
+      padding: var(--space-sm) var(--space-md);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--primary);
+      min-height: 44px;
+    }
+
+    /* Ingredient Tray */
+    .pantry-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+
+    .ingredient-badge {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      color: var(--on-surface-variant);
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+    }
+
+    .ingredient-badge.collected {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      box-shadow: var(--shadow-sky);
+      transform: translateY(-2px);
+    }
+
+    .ingredient-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--rounded-full);
+      background: var(--surface-container-high);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      color: var(--on-surface-variant);
+    }
+
+    .ingredient-badge.collected .ingredient-icon {
+      background: var(--tertiary-container);
+      color: var(--on-surface);
+    }
+
+    .ingredient-text {
+      display: grid;
+      gap: 1px;
+    }
+
+    .ingredient-title {
+      font-weight: 700;
+      font-size: var(--label-size);
+      line-height: 1.25;
+    }
+
+    .ingredient-status {
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+    }
+
+    .ingredient-badge.collected .ingredient-status {
+      color: var(--positive);
+      font-weight: 700;
+    }
+
+    /* Stage Stepper Nav */
+    .stepper-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    .step-pill {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-full);
+      border: 2px solid var(--outline-variant);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      font-weight: 700;
+      font-size: var(--label-size);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      box-shadow: var(--shadow-grape);
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+    }
+    .step-pill:hover {
+      transform: var(--pop-scale);
+    }
+    .step-pill:active {
+      transform: scale(0.97);
+    }
+    .step-pill.active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .step-pill.completed:not(.active) {
+      background: var(--positive-container);
+      color: var(--positive);
+      border-color: var(--positive);
+      box-shadow: var(--shadow-positive);
+    }
+    .step-pill.cert-pill {
+      margin-left: auto;
+      background: var(--secondary-container);
+      color: var(--secondary);
+      border-color: var(--secondary);
+    }
+    .step-pill.cert-pill.active {
+      background: var(--secondary);
+      color: var(--on-secondary);
+      box-shadow: var(--shadow-grape-deep);
+    }
+
+    /* Main Stage Card */
+    .stage-card {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      box-shadow: var(--shadow-pink);
+      padding: var(--space-xl);
+      display: grid;
+      gap: var(--space-lg);
+      animation: popIn var(--dur-long) var(--ease-bounce);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .stage-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+    }
+
+    .stage-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      margin: 0 0 var(--space-xs) 0;
+      color: var(--on-surface);
+    }
+    .stage-title em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .stage-desc {
+      margin: 0;
+      color: var(--on-surface-variant);
+      max-width: 65ch;
+    }
+
+    .magic-tip {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      color: var(--on-surface);
+    }
+    .magic-tip-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--rounded-full);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    /* Buttons */
+    .btn {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded-full);
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover:not(:disabled) {
+      transform: var(--pop-scale);
+    }
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: var(--shadow-pink);
+    }
+    .btn-primary:hover:not(:disabled) {
+      box-shadow: var(--shadow-pink-deep);
+    }
+    .btn-secondary {
+      background: var(--secondary);
+      color: var(--on-secondary);
+      box-shadow: var(--shadow-grape);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      box-shadow: var(--shadow-grape-deep);
+    }
+    .btn-quiet {
+      background: var(--surface-container);
+      color: var(--primary);
+    }
+    .btn-positive {
+      background: var(--positive);
+      color: var(--on-positive);
+      box-shadow: var(--shadow-positive);
+    }
+
+    /* Feedback Banner */
+    .feedback-box {
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      font-weight: 700;
+      animation: popIn var(--dur-short) var(--ease-bounce);
+    }
+    .feedback-box.success {
+      background: var(--positive-container);
+      color: var(--positive);
+    }
+    .feedback-box.error {
+      background: var(--error-container);
+      color: var(--error);
+    }
+    .feedback-box.info {
+      background: var(--secondary-container);
+      color: var(--secondary);
+    }
+
+    /* Stage 1: Pair Diagnosis Cards */
+    .pair-list {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .pair-row {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .pair-label {
+      font-weight: 800;
+      font-size: var(--label-size);
+      color: var(--secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .pair-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .choice-card {
+      text-align: left;
+      background: var(--surface-container-low);
+      border: 2px solid transparent;
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      box-shadow: var(--shadow-sky);
+      cursor: pointer;
+      display: grid;
+      gap: var(--space-xs);
+      color: var(--on-surface);
+      min-height: 76px;
+      transition: transform var(--dur-short) var(--ease-bounce), box-shadow var(--dur-short) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .choice-card:hover {
+      transform: var(--lift);
+      box-shadow: var(--shadow-pink);
+    }
+    .choice-card.correct {
+      border-color: var(--positive);
+      background: var(--positive-container);
+      box-shadow: var(--shadow-positive);
+    }
+    .choice-card.wrong {
+      border-color: var(--error);
+      background: var(--error-container);
+    }
+    .choice-tag {
+      font-size: var(--label-size);
+      font-weight: 700;
+      color: var(--on-surface-variant);
+    }
+
+    /* Stage 2: 9-Grid Sensory Radar */
+    .radar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .word-bank {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .word-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+
+    .word-chip {
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded-full);
+      border: 2px solid var(--secondary);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-grape);
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-micro) var(--ease-out);
+    }
+    .word-chip:hover { transform: var(--pop-scale); }
+    .word-chip.selected {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--on-primary);
+      box-shadow: var(--shadow-pink-deep);
+      transform: var(--pop-scale);
+    }
+    .word-chip.used {
+      opacity: 0.4;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .mandala-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-sm);
+      background: var(--surface-container);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+    }
+
+    .mandala-cell {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-sm);
+      min-height: 110px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      gap: var(--space-xs);
+      box-shadow: var(--shadow-sky);
+      border: 2px dashed var(--outline-variant);
+      cursor: pointer;
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out);
+    }
+    .mandala-cell:hover:not(.center-cell):not(.filled) {
+      transform: var(--lift);
+      border-color: var(--primary);
+    }
+    .mandala-cell.center-cell {
+      background: var(--primary);
+      color: var(--on-primary);
+      border: none;
+      box-shadow: var(--shadow-pink-deep);
+      cursor: default;
+      padding: var(--space-md);
+    }
+    .mandala-cell.filled {
+      border-style: solid;
+      border-color: var(--positive);
+      background: var(--positive-container);
+      cursor: default;
+      box-shadow: var(--shadow-positive);
+    }
+
+    .cell-cat {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .mandala-cell.filled .cell-cat {
+      color: var(--positive);
+    }
+
+    .cell-word {
+      font-weight: 800;
+      color: var(--on-surface);
+      font-size: var(--body-size);
+    }
+
+    /* Stage 3: Expansion Potion Workshop */
+    .before-after-banner {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr);
+      gap: var(--space-md);
+      align-items: center;
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+    }
+
+    .short-sentence-pill {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      text-align: center;
+      box-shadow: var(--shadow-grape);
+    }
+
+    .expanded-preview-box {
+      background: var(--surface-container-low);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      box-shadow: var(--shadow-pink);
+      min-height: 88px;
+      display: grid;
+      gap: var(--space-xs);
+    }
+
+    .seg-time { color: var(--secondary); font-weight: 700; }
+    .seg-action { color: var(--primary); font-weight: 700; }
+    .seg-sense { color: var(--positive); font-weight: 700; }
+    .seg-simile { background: var(--primary-container); color: var(--on-primary-container); padding: 0 6px; border-radius: 6px; font-weight: 700; }
+
+    .jar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .jar-card {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .jar-title {
+      font-weight: 800;
+      color: var(--on-surface);
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .jar-option {
+      text-align: left;
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      border: 2px solid transparent;
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      cursor: pointer;
+      box-shadow: var(--shadow-sky);
+      transition: transform var(--dur-short) var(--ease-bounce), border-color var(--dur-micro) var(--ease-out);
+    }
+    .jar-option:hover { transform: translateY(-2px); }
+    .jar-option.selected {
+      border-color: var(--primary);
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      font-weight: 700;
+      box-shadow: var(--shadow-pink);
+    }
+
+    /* Stage 4: Spiral Timeline */
+    .spiral-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+
+    .spiral-diagram-card {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+      justify-items: center;
+      text-align: center;
+    }
+
+    .timeline-slots {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .timeline-slot {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: var(--space-md);
+      align-items: center;
+      min-height: 80px;
+      border: 2px dashed var(--outline);
+      cursor: pointer;
+      transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+    }
+    .timeline-slot.filled {
+      background: var(--surface-container-low);
+      border-style: solid;
+      border-color: var(--secondary);
+      box-shadow: var(--shadow-grape);
+    }
+    .timeline-slot.correct {
+      border-color: var(--positive);
+      background: var(--positive-container);
+      box-shadow: var(--shadow-positive);
+    }
+
+    .slot-badge {
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      background: var(--secondary);
+      color: var(--on-secondary);
+      font-weight: 800;
+      font-size: var(--label-size);
+      white-space: nowrap;
+    }
+    .timeline-slot.correct .slot-badge {
+      background: var(--positive);
+    }
+
+    .story-cards-pool {
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .story-card-btn {
+      text-align: left;
+      background: var(--surface-container-low);
+      border: 2px solid var(--outline-variant);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      cursor: pointer;
+      color: var(--on-surface);
+      box-shadow: var(--shadow-pink);
+      transition: transform var(--dur-short) var(--ease-bounce);
+    }
+    .story-card-btn:hover { transform: var(--lift); }
+    .story-card-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-container);
+      font-weight: 700;
+    }
+    .story-card-btn.used {
+      opacity: 0.4;
+      cursor: default;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Stage 5: Essay Assembly */
+    .essay-paper {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-xl);
+      display: grid;
+      gap: var(--space-md);
+      line-height: 1.9;
+    }
+
+    .essay-title {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: var(--headline-size);
+      text-align: center;
+      margin: 0 0 var(--space-xs) 0;
+      color: var(--on-surface);
+    }
+
+    .essay-para {
+      margin: 0;
+      background: var(--surface-container-low);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--rounded);
+      box-shadow: var(--shadow-sky);
+    }
+
+    .blank-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      min-width: 110px;
+      padding: 2px var(--space-md);
+      margin: 0 4px;
+      border-radius: var(--rounded-full);
+      border: 2px dashed var(--primary);
+      background: var(--surface-container);
+      color: var(--primary);
+      font-weight: 800;
+      cursor: pointer;
+      vertical-align: middle;
+      transition: transform var(--dur-short) var(--ease-bounce), background-color var(--dur-micro) var(--ease-out);
+    }
+    .blank-btn.active-blank {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+      border-style: solid;
+    }
+    .blank-btn.filled {
+      border-style: solid;
+      background: var(--secondary);
+      border-color: var(--secondary);
+      color: var(--on-secondary);
+    }
+    .blank-btn.correct {
+      background: var(--positive);
+      border-color: var(--positive);
+      color: var(--on-positive);
+    }
+
+    .checklist-box {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-sm);
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .check-item input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Certificate View */
+    .cert-frame {
+      background: var(--surface-container-low);
+      border: 6px solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-pink-deep);
+      display: grid;
+      gap: var(--space-lg);
+      text-align: center;
+    }
+
+    .cert-ribbon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      background: var(--secondary);
+      color: var(--on-secondary);
+      padding: var(--space-xs) var(--space-lg);
+      border-radius: var(--rounded-full);
+      font-weight: 800;
+      margin: 0 auto;
+    }
+
+    .cert-recipient {
+      font-family: var(--font-headline);
+      font-weight: 900;
+      font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .cert-quote-box {
+      background: var(--surface-container);
+      border-radius: var(--rounded);
+      padding: var(--space-lg);
+      text-align: left;
+      max-width: 65ch;
+      margin: 0 auto;
+    }
+
+    .stage-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      padding-top: var(--space-md);
+    }
+
+    .utility-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-md);
+      color: var(--on-surface-variant);
+      font-size: var(--label-size);
+      padding: var(--space-sm) var(--space-md);
+    }
+
+    @media (max-width: 820px) {
+      .hero-top { grid-template-columns: 1fr; }
+      .pantry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .radar-layout, .spiral-layout, .jar-grid, .pair-options { grid-template-columns: 1fr; }
+      .before-after-banner { grid-template-columns: 1fr; text-align: center; }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid { padding: var(--space-md); gap: var(--space-md); }
+      .hero-panel, .stage-card { padding: var(--space-lg); }
+      .pantry-grid { grid-template-columns: 1fr; }
+      .mandala-grid { gap: var(--space-xs); }
+      .mandala-cell { min-height: 92px; padding: var(--space-xs); }
+      .step-pill.cert-pill { margin-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-grid">
+    <!-- Top Header & Chef Dashboard -->
+    <header class="hero-panel">
+      <div class="hero-top">
+        <div>
+          <div class="kicker-pill">
+            <i data-lucide="chef-hat" aria-hidden="true" style="width:16px;height:16px;"></i>
+            <span>國小四年級國語《美味的一堂課》九宮格寫作冒險</span>
+          </div>
+          <h1 class="display">美味寫作<em>魔法師</em>：文句擴寫五關闖關遊戲</h1>
+          <p class="hero-subtitle">
+            歡迎來到魔法廚房！你將扮演「美味小廚師兼寫作魔法師」，通過 5 道寫作關卡，集齊 5 樣美味魔法材料，將平凡短句組裝成色香味俱全的美食篇章。
+          </p>
+        </div>
+
+        <div class="chef-profile-box">
+          <label for="chef-name-input" class="field-label">小廚師魔法名牌（將印在典藏證書上）</label>
+          <div class="input-row">
+            <input id="chef-name-input" type="text" class="pill-input" maxlength="20" placeholder="例如：王小明" oninput="updateChefName(this.value)">
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="progress-block">
+          <div class="progress-meta">
+            <span>魔法料理進度</span>
+            <span id="progress-label">已完成 0 / 5 關</span>
+          </div>
+          <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progress-bar-aria">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="score-pill" aria-live="polite">
+          <i data-lucide="sparkles" aria-hidden="true" style="width:20px;height:20px;"></i>
+          <span id="score-display">0 / 250 魔法星</span>
+        </div>
+      </div>
+
+      <!-- 5 Collectible Ingredients -->
+      <div>
+        <div class="field-label">已收集的美味魔法材料（集滿 5 樣解鎖典藏證書）</div>
+        <div class="pantry-grid" id="pantry-grid"></div>
+      </div>
+    </header>
+
+    <!-- 5-Stage Navigation Stepper -->
+    <nav class="stepper-nav" aria-label="闖關關卡導覽" id="stepper-nav"></nav>
+
+    <!-- Active Interactive Stage Container -->
+    <main id="stage-container" aria-live="polite"></main>
+
+    <!-- Utility / Source Footer -->
+    <footer class="utility-bar">
+      <span>教學設計參考：國小四年級《美味的一堂課》曼陀羅九宮格與「通詞達理」文句擴寫策略</span>
+      <button type="button" class="btn btn-quiet" id="reset-game-btn" onclick="handleResetGame(this)">
+        <i data-lucide="rotate-ccw" aria-hidden="true" style="width:16px;height:16px;"></i>
+        <span>重新開始冒險</span>
+      </button>
+    </footer>
+  </div>
+
+  <api-shim></api-shim>
+  <script>
+    const INGREDIENTS = [
+      { id: 1, name: `黃金鬆餅粉`, icon: `target`, stageTitle: `中間格大鎖定` },
+      { id: 2, name: `五感香料罐`, icon: `wind`, stageTitle: `五感雷達站` },
+      { id: 3, name: `比喻魔法糖漿`, icon: `wand-2`, stageTitle: `擴寫修辭魔法` },
+      { id: 4, name: `時間火候計時器`, icon: `clock`, stageTitle: `烹飪時間軸` },
+      { id: 5, name: `銜接金湯匙`, icon: `award`, stageTitle: `篇章大組裝` }
+    ];
+
+    const STAGE1_PAIRS = [
+      {
+        label: `第 1 題：單元課文大主題`,
+        options: [
+          { text: `美味的一堂課`, isSpecific: false, hint: `「美味的一堂課」範圍太大了，容易發散沒有方向，再找找更具體的句子吧！` },
+          { text: `我們這組手作鬆餅時，最讓人垂涎三尺的美味瞬間`, isSpecific: true, hint: `太棒了！鎖定「我們這組」、「手作鬆餅」和「最誘人的瞬間」，畫面馬上清晰起來！` }
+        ]
+      },
+      {
+        label: `第 2 題：製作過程的緊張感`,
+        options: [
+          { text: `把金黃麵糊倒進烤盤，翻面成功的那一刻有多緊張？`, isSpecific: true, hint: `答對了！用「問句」加上具體動作「倒麵糊、翻面」，最容易聯想到感官與心情！` },
+          { text: `作菜`, isSpecific: false, hint: `「作菜」兩個字太模糊啦，不知道要做哪一道菜，也很難展開五感描寫喔！` }
+        ]
+      },
+      {
+        label: `第 3 題：品嚐與感受`,
+        options: [
+          { text: `快樂的回憶`, isSpecific: false, hint: `「快樂的回憶」太抽象了，寫出來容易變成空洞的流水帳喔！` },
+          { text: `和組員一起淋上蜂蜜、大口咬下熱鬆餅的幸福滋味`, isSpecific: true, hint: `沒錯！「淋蜂蜜、咬熱鬆餅」具體又明確，中間格就要這樣鎖定！` }
+        ]
+      },
+      {
+        label: `第 4 題：香氣與味道`,
+        options: [
+          { text: `剛出爐的鬆餅如何靠香氣和口感征服全班同學？`, isSpecific: true, hint: `精準鎖定！這個具體問句能自然引出嗅覺、味覺和同學的反應！` },
+          { text: `食物很好吃`, isSpecific: false, hint: `「食物很好吃」太籠統了，無法鎖定在鬆餅與教室情境裡喔！` }
+        ]
+      }
+    ];
+
+    const STAGE2_CARDS = [
+      { id: `w1`, text: `金黃誘人`, cat: `視覺`, hint: `「金黃誘人」是用眼睛看到的顏色與光澤喔！` },
+      { id: `w2`, text: `冒著白煙`, cat: `視覺`, hint: `「冒著白煙」要用眼睛觀察畫面喔！` },
+      { id: `w3`, text: `滋滋作響`, cat: `聽覺`, hint: `「滋滋作響」是麵糊在烤盤上發出的聲音，用耳朵聽聽看！` },
+      { id: `w4`, text: `歡呼驚嘆`, cat: `聽覺`, hint: `「歡呼驚嘆」是教室裡聽到的熱鬧聲音喔！` },
+      { id: `w5`, text: `濃郁奶油香`, cat: `嗅味覺`, hint: `「濃郁奶油香」是用鼻子聞到的香味喔！` },
+      { id: `w6`, text: `外酥內軟`, cat: `嗅味覺`, hint: `「外酥內軟」是放進嘴巴裡咬下去嚐到的口感！` },
+      { id: `w7`, text: `輕輕攪拌`, cat: `動作`, hint: `「輕輕攪拌」是雙手正在做的烹飪動作喔！` },
+      { id: `w8`, text: `小心翻面`, cat: `動作`, hint: `「小心翻面」是拿著鍋鏟的動詞短語！` }
+    ];
+
+    const STAGE2_SLOTS = [
+      { id: `s1`, cat: `視覺`, icon: `eye`, label: `視覺雷達 ①` },
+      { id: `s2`, cat: `視覺`, icon: `eye`, label: `視覺雷達 ②` },
+      { id: `s3`, cat: `聽覺`, icon: `ear`, label: `聽覺雷達 ①` },
+      { id: `s4`, cat: `聽覺`, icon: `ear`, label: `聽覺雷達 ②` },
+      { id: `center`, cat: `核心`, icon: `target`, label: `中間格` },
+      { id: `s5`, cat: `嗅味覺`, icon: `wind`, label: `嗅味覺雷達 ①` },
+      { id: `s6`, cat: `嗅味覺`, icon: `wind`, label: `嗅味覺雷達 ②` },
+      { id: `s7`, cat: `動作`, icon: `hand`, label: `動作雷達 ①` },
+      { id: `s8`, cat: `動作`, icon: `hand`, label: `動作雷達 ②` }
+    ];
+
+    const STAGE3_JARS = {
+      timeMood: {
+        title: `① 加入時間與心情`,
+        icon: `clock`,
+        options: [
+          `忙了一整節課，我既期待又興奮地`,
+          `看著金黃鬆餅剛起鍋，我迫不及待地`,
+          `下課前十分鐘，我開心地`
+        ]
+      },
+      actionSound: {
+        title: `② 加入動作與聽覺`,
+        icon: `hand`,
+        options: [
+          `拿起叉子，切下還在烤盤邊滋滋作響的鬆餅，`,
+          `小心夾起熱騰騰的鬆餅，大口咬下酥脆的邊緣，`,
+          `雙手捧著餐盤，輕輕剝開剛烤好的鬆餅，`
+        ]
+      },
+      senseTaste: {
+        title: `③ 加入視覺與嗅味覺`,
+        icon: `wind`,
+        options: [
+          `金黃誘人的餅皮立刻散發濃郁奶油香，吃起來外酥內軟，`,
+          `濃郁的蛋奶香瞬間撲鼻而來，甜蜜蜜的蜂蜜在舌尖化開，`,
+          `冒著白煙的餅皮散發溫暖甜香，一口咬下溫熱又滑順，`
+        ]
+      },
+      simile: {
+        title: `④ 施展比喻修辭魔法`,
+        icon: `sparkles`,
+        options: [
+          `簡直像雲朵一樣綿密鬆軟，讓我幸福得瞇起眼睛！`,
+          `彷彿把整片金色陽光都吃進肚子裡，讓人回味無窮！`,
+          `就像咬下一口軟綿綿的棉花糖，香甜滋味在嘴裡久久不散！`
+        ]
+      }
+    };
+
+    const STAGE4_CARDS = [
+      {
+        id: `t3`,
+        correctRole: 2,
+        text: `金黃誘人的鬆餅終於出爐！濃郁的奶油香撲鼻而來，咬下去外酥內軟，像雲朵一樣綿密。`
+      },
+      {
+        id: `t1`,
+        correctRole: 0,
+        text: `老師宣布要做手作鬆餅時，全班歡呼起來，我們這組立刻分工打蛋、過篩麵粉並準備奶油。`
+      },
+      {
+        id: `t4`,
+        correctRole: 3,
+        text: `大家一起分享這盤熱騰騰的點心，教室裡充滿笑聲，這堂課成了我最難忘的美味回憶。`
+      },
+      {
+        id: `t2`,
+        correctRole: 1,
+        text: `麵糊倒進烤盤後滋滋作響，我緊握鍋鏟小心翻面，既期待又緊張，生怕把鬆餅烤焦了。`
+      }
+    ];
+
+    const STAGE4_ROLES = [
+      { idx: 0, badge: `1. 起`, title: `課前期待備料` },
+      { idx: 1, badge: `2. 承`, title: `手忙腳亂製作` },
+      { idx: 2, badge: `3. 轉`, title: `美味出爐品嚐` },
+      { idx: 3, badge: `4. 合`, title: `快樂分享餘香` }
+    ];
+
+    const STAGE5_CONNECTORS = [
+      { id: `c1`, text: `一……就……`, shortA: `一`, shortB: `就` },
+      { id: `c2`, text: `既……又……`, shortA: `既`, shortB: `又` },
+      { id: `c3`, text: `當美味終於出爐時`, shortA: `當美味終於出爐時`, shortB: `` },
+      { id: `c4`, text: `不僅……還……`, shortA: `不僅`, shortB: `還` },
+      { id: `c5`, text: `雖然……但是……`, shortA: `雖然`, shortB: `但是` }
+    ];
+
+    const DEFAULT_STATE = {
+      studentName: ``,
+      currentStage: 1,
+      completedStages: [],
+      stage1Choices: [null, null, null, null],
+      stage2Placements: {},
+      stage3Choices: {
+        timeMood: null,
+        actionSound: null,
+        senseTaste: null,
+        simile: null
+      },
+      stage3Locked: false,
+      stage4Order: [null, null, null, null],
+      stage4Verified: false,
+      stage5Connectors: [null, null, null, null],
+      stage5Verified: false,
+      selfChecks: [false, false, false]
+    };
+
+    let appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    let selectedStage2Card = null;
+    let selectedStage4Card = null;
+    let activeStage5Blank = 0;
+    let transientFeedback = null;
+
+    function cloneState(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    async function saveState() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+        try {
+          await window.notebookAppApi.setAppState(appState);
+        } catch (err) {
+          console.error(`State save failed`, err);
+        }
+      }
+    }
+
+    function calculateScore() {
+      let score = 0;
+      // Stage 1: 10 pts per correct pair (max 40)
+      appState.stage1Choices.forEach((choiceIdx, pairIdx) => {
+        if (choiceIdx !== null && STAGE1_PAIRS[pairIdx].options[choiceIdx].isSpecific) {
+          score += 10;
+        }
+      });
+      // Stage 2: 10 pts per placed card (max 80)
+      score += Object.keys(appState.stage2Placements).length * 10;
+      // Stage 3: 40 pts when locked
+      if (appState.stage3Locked) score += 40;
+      // Stage 4: 40 pts when verified
+      if (appState.stage4Verified) score += 40;
+      // Stage 5: 50 pts when verified
+      if (appState.stage5Verified) score += 50;
+      return score;
+    }
+
+    function markStageComplete(stageNum) {
+      if (!appState.completedStages.includes(stageNum)) {
+        appState.completedStages.push(stageNum);
+        appState.completedStages.sort((a, b) => a - b);
+      }
+    }
+
+    function updateChefName(val) {
+      appState.studentName = val.trim();
+      saveState();
+      if (appState.currentStage === 6) {
+        renderStage();
+      }
+    }
+
+    function goToStage(stageNum) {
+      appState.currentStage = stageNum;
+      transientFeedback = null;
+      selectedStage2Card = null;
+      selectedStage4Card = null;
+      saveState();
+      renderAll();
+    }
+
+    function renderHeaderStats() {
+      const completedCount = appState.completedStages.length;
+      const pct = Math.round((completedCount / 5) * 100);
+
+      const progLabel = document.getElementById(`progress-label`);
+      if (progLabel) progLabel.textContent = `已完成 ${completedCount} / 5 關`;
+
+      const progFill = document.getElementById(`progress-fill`);
+      if (progFill) progFill.style.width = `${pct}%`;
+
+      const progAria = document.getElementById(`progress-bar-aria`);
+      if (progAria) progAria.setAttribute(`aria-valuenow`, String(completedCount));
+
+      const scoreEl = document.getElementById(`score-display`);
+      if (scoreEl) scoreEl.textContent = `${calculateScore()} / 250 魔法星`;
+
+      const nameInput = document.getElementById(`chef-name-input`);
+      if (nameInput && nameInput.value !== appState.studentName) {
+        nameInput.value = appState.studentName;
+      }
+
+      const pantryEl = document.getElementById(`pantry-grid`);
+      if (pantryEl) {
+        pantryEl.innerHTML = INGREDIENTS.map((ing) => {
+          const isCollected = appState.completedStages.includes(ing.id);
+          return `
+            <div class="ingredient-badge ${isCollected ? `collected` : ``}">
+              <div class="ingredient-icon">
+                <i data-lucide="${isCollected ? `check` : ing.icon}" aria-hidden="true" style="width:18px;height:18px;"></i>
+              </div>
+              <div class="ingredient-text">
+                <span class="ingredient-title">${ing.name}</span>
+                <span class="ingredient-status">${isCollected ? `已收集完成` : `第 ${ing.id} 關解鎖`}</span>
+              </div>
+            </div>
+          `;
+        }).join(``);
+      }
+    }
+
+    function renderStepper() {
+      const nav = document.getElementById(`stepper-nav`);
+      if (!nav) return;
+
+      const pills = INGREDIENTS.map((ing) => {
+        const active = appState.currentStage === ing.id;
+        const done = appState.completedStages.includes(ing.id);
+        return `
+          <button type="button" class="step-pill ${active ? `active` : ``} ${done ? `completed` : ``}" onclick="goToStage(${ing.id})">
+            <i data-lucide="${done ? `check-circle-2` : ing.icon}" aria-hidden="true" style="width:16px;height:16px;"></i>
+            <span>第 ${ing.id} 關：${ing.stageTitle}</span>
+          </button>
+        `;
+      });
+
+      const allDone = appState.completedStages.length === 5;
+      pills.push(`
+        <button type="button" class="step-pill cert-pill ${appState.currentStage === 6 ? `active` : ``}" onclick="goToStage(6)">
+          <i data-lucide="award" aria-hidden="true" style="width:16px;height:16px;"></i>
+          <span>${allDone ? `領取典藏證書` : `證書預覽（${appState.completedStages.length}/5）`}</span>
+        </button>
+      `);
+
+      nav.innerHTML = pills.join(``);
+    }
+
+    function renderFeedbackHtml() {
+      if (!transientFeedback) return ``;
+      const iconName = transientFeedback.type === `success` ? `check-circle-2` : (transientFeedback.type === `error` ? `help-circle` : `lightbulb`);
+      return `
+        <div class="feedback-box ${transientFeedback.type}" role="status">
+          <i data-lucide="${iconName}" aria-hidden="true" style="width:22px;height:22px;flex-shrink:0;"></i>
+          <span>${transientFeedback.message}</span>
+        </div>
+      `;
+    }
+
+    // --- STAGE 1 HANDLERS ---
+    function chooseStage1Option(pairIdx, optIdx) {
+      appState.stage1Choices[pairIdx] = optIdx;
+      const opt = STAGE1_PAIRS[pairIdx].options[optIdx];
+      if (opt.isSpecific) {
+        transientFeedback = { type: `success`, message: `第 ${pairIdx + 1} 題答對！${opt.hint}` };
+      } else {
+        transientFeedback = { type: `error`, message: `第 ${pairIdx + 1} 題再想想看：${opt.hint}` };
+      }
+
+      const allCorrect = STAGE1_PAIRS.every((pair, idx) => {
+        const picked = appState.stage1Choices[idx];
+        return picked !== null && pair.options[picked].isSpecific;
+      });
+      if (allCorrect) {
+        markStageComplete(1);
+        transientFeedback = {
+          type: `success`,
+          message: `恭喜通過第一關！你成功鎖定了具體的情境問句，獲得材料①「黃金鬆餅粉」！`
+        };
+      }
+      saveState();
+      renderAll();
+    }
+
+    function renderStage1() {
+      const done = appState.completedStages.includes(1);
+      const pairsHtml = STAGE1_PAIRS.map((pair, pairIdx) => {
+        const chosenIdx = appState.stage1Choices[pairIdx];
+        const optionsHtml = pair.options.map((opt, optIdx) => {
+          let cls = ``;
+          let badge = `點擊選擇這張卡片`;
+          if (chosenIdx === optIdx) {
+            cls = opt.isSpecific ? `correct` : `wrong`;
+            badge = opt.isSpecific ? `✓ 聚焦具體情境（正確！）` : `✗ 模糊抽象主題（再試一次）`;
+          }
+          return `
+            <button type="button" class="choice-card ${cls}" onclick="chooseStage1Option(${pairIdx}, ${optIdx})">
+              <span class="choice-tag">${badge}</span>
+              <span>「${opt.text}」</span>
+            </button>
+          `;
+        }).join(``);
+
+        return `
+          <div class="pair-row">
+            <div class="pair-label">
+              <i data-lucide="target" aria-hidden="true" style="width:16px;height:16px;"></i>
+              <span>${pair.label}</span>
+            </div>
+            <div class="pair-options">${optionsHtml}</div>
+          </div>
+        `;
+      }).join(``);
+
+      return `
+        <section class="stage-card">
+          <div class="stage-header">
+            <div>
+              <div class="kicker-pill">第一關 · 收集材料① 黃金鬆餅粉</div>
+              <h2 class="stage-title">中間格<em>大鎖定</em>：區分「模糊」與「聚焦」</h2>
+              <p class="stage-desc">九宮格的中間格決定了寫作方向！請從下面 4 組卡片中，選出「聚焦具體情境或可回答的問句」，避開模糊抽象的大主題。</p>
+            </div>
+          </div>
+
+          <div class="magic-tip">
+            <div class="magic-tip-icon"><i data-lucide="lightbulb" aria-hidden="true" style="width:20px;height:20px;"></i></div>
+            <div>
+              <strong>寫作魔法秘訣：</strong>如果中間格只寫「作菜」，腦袋會一片空白；改寫成「誰、在哪裡、做什麼最美味的瞬間」，後面的五感描寫就會源源不絕喔！
+            </div>
+          </div>
+
+          ${renderFeedbackHtml()}
+          <div class="pair-list">${pairsHtml}</div>
+
+          <div class="stage-footer">
+            <span style="color:var(--on-surface-variant);font-weight:700;">
+              ${done ? `✓ 已獲得「黃金鬆餅粉」` : `請完成全部 4 題的正確鎖定`}
+            </span>
+            <button type="button" class="btn btn-primary" ${done ? `` : `disabled`} onclick="goToStage(2)">
+              <span>前往第二關：五感雷達站</span>
+              <i data-lucide="arrow-right" aria-hidden="true" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    // --- STAGE 2 HANDLERS ---
+    function selectStage2Card(cardId) {
+      const alreadyUsed = Object.values(appState.stage2Placements).includes(cardId);
+      if (alreadyUsed) return;
+      selectedStage2Card = selectedStage2Card === cardId ? null : cardId;
+      transientFeedback = null;
+      renderStage();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function placeStage2Card(slotId) {
+      if (slotId === `center` || appState.stage2Placements[slotId]) return;
+      if (!selectedStage2Card) {
+        transientFeedback = { type: `info`, message: `請先在左邊點選一張「五感詞彙卡」，再點九宮格裡的雷達格子放進去喔！` };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      const card = STAGE2_CARDS.find((c) => c.id === selectedStage2Card);
+      const slot = STAGE2_SLOTS.find((s) => s.id === slotId);
+      if (!card || !slot) return;
+
+      if (card.cat === slot.cat) {
+        appState.stage2Placements[slotId] = card.id;
+        selectedStage2Card = null;
+        const placedCount = Object.keys(appState.stage2Placements).length;
+        if (placedCount === 8) {
+          markStageComplete(2);
+          transientFeedback = {
+            type: `success`,
+            message: `太神了！九宮格放射型思考全部填滿，成功收集材料②「五感魔法香料罐」！`
+          };
+        } else {
+          transientFeedback = {
+            type: `success`,
+            message: `放對位置了！「${card.text}」屬於【${card.cat}雷達】，繼續完成剩下的格子吧！`
+          };
+        }
+        saveState();
+        renderAll();
+      } else {
+        transientFeedback = {
+          type: `error`,
+          message: `哎呀，這格是【${slot.cat}雷達】喔！小提示：${card.hint}`
+        };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+      }
+    }
+
+    function renderStage2() {
+      const done = appState.completedStages.includes(2);
+      const usedCardIds = Object.values(appState.stage2Placements);
+
+      const bankHtml = STAGE2_CARDS.map((card) => {
+        const isUsed = usedCardIds.includes(card.id);
+        const isSel = selectedStage2Card === card.id;
+        return `
+          <button type="button" class="word-chip ${isUsed ? `used` : ``} ${isSel ? `selected` : ``}"
+                  ${isUsed ? `disabled` : ``} onclick="selectStage2Card('${card.id}')">
+            ${card.text}
+          </button>
+        `;
+      }).join(``);
+
+      const gridHtml = STAGE2_SLOTS.map((slot) => {
+        if (slot.id === `center`) {
+          return `
+            <div class="mandala-cell center-cell">
+              <i data-lucide="target" aria-hidden="true" style="width:20px;height:20px;"></i>
+              <span style="font-size:0.75rem;font-weight:700;">中間格</span>
+              <span style="font-size:0.875rem;font-weight:900;line-height:1.3;">手作鬆餅最美味的瞬間</span>
+            </div>
+          `;
+        }
+        const placedCardId = appState.stage2Placements[slot.id];
+        const placedCard = placedCardId ? STAGE2_CARDS.find((c) => c.id === placedCardId) : null;
+        return `
+          <button type="button" class="mandala-cell ${placedCard ? `filled` : ``}" onclick="placeStage2Card('${slot.id}')">
+            <span class="cell-cat">
+              <i data-lucide="${slot.icon}" aria-hidden="true" style="width:14px;height:14px;"></i>
+              <span>${slot.label}</span>
+            </span>
+            <span class="cell-word">${placedCard ? placedCard.text : `點此放入`}</span>
+          </button>
+        `;
+      }).join(``);
+
+      return `
+        <section class="stage-card">
+          <div class="stage-header">
+            <div>
+              <div class="kicker-pill">第二關 · 收集材料② 五感魔法香料罐</div>
+              <h2 class="stage-title">五感<em>雷達站</em>：九宮格放射型思考</h2>
+              <p class="stage-desc">運用九宮格從中間往外「放射型聯想」！請先點選左方的詞彙卡，再點擊右方九宮格中對應的感官雷達格子（視覺、聽覺、嗅味覺、動作）。</p>
+            </div>
+          </div>
+
+          ${renderFeedbackHtml()}
+
+          <div class="radar-layout">
+            <div class="word-bank">
+              <div class="jar-title">
+                <i data-lucide="sparkles" aria-hidden="true" style="width:18px;height:18px;"></i>
+                <span>詞彙補給站（已放入 ${usedCardIds.length} / 8 張）</span>
+              </div>
+              <p style="margin:0;font-size:var(--label-size);color:var(--on-surface-variant);">
+                步驟 1：點選一張詞彙卡 ➔ 步驟 2：點選九宮格對應的感官格
+              </p>
+              <div class="word-chips">${bankHtml}</div>
+            </div>
+
+            <div class="mandala-grid" aria-label="九宮格五感雷達圖">${gridHtml}</div>
+          </div>
+
+          <div class="stage-footer">
+            <button type="button" class="btn btn-quiet" onclick="goToStage(1)">
+              <i data-lucide="arrow-left" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>回上一關</span>
+            </button>
+            <button type="button" class="btn btn-primary" ${done ? `` : `disabled`} onclick="goToStage(3)">
+              <span>前往第三關：擴寫修辭魔法</span>
+              <i data-lucide="arrow-right" aria-hidden="true" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    // --- STAGE 3 HANDLERS ---
+    function pickStage3Option(jarKey, idx) {
+      appState.stage3Choices[jarKey] = idx;
+      transientFeedback = null;
+      saveState();
+      renderStage();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function randomStage3Combo() {
+      appState.stage3Choices.timeMood = Math.floor(Math.random() * 3);
+      appState.stage3Choices.actionSound = Math.floor(Math.random() * 3);
+      appState.stage3Choices.senseTaste = Math.floor(Math.random() * 3);
+      appState.stage3Choices.simile = Math.floor(Math.random() * 3);
+      transientFeedback = { type: `info`, message: `魔法隨機調配完成！讀讀看你的擴寫長句，喜歡的話就按下「施展擴寫魔法」吧！` };
+      saveState();
+      renderStage();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function getStage3ExpandedText() {
+      const c = appState.stage3Choices;
+      const t = c.timeMood !== null ? STAGE3_JARS.timeMood.options[c.timeMood] : `（請選時間心情）`;
+      const a = c.actionSound !== null ? STAGE3_JARS.actionSound.options[c.actionSound] : `（請選動作聽覺）`;
+      const s = c.senseTaste !== null ? STAGE3_JARS.senseTaste.options[c.senseTaste] : `（請選視覺嗅味覺）`;
+      const m = c.simile !== null ? STAGE3_JARS.simile.options[c.simile] : `（請選比喻修辭）`;
+      return { t, a, s, m, full: `${t}${a}${s}${m}` };
+    }
+
+    function lockStage3Spell() {
+      const c = appState.stage3Choices;
+      if (c.timeMood === null || c.actionSound === null || c.senseTaste === null || c.simile === null) {
+        transientFeedback = { type: `error`, message: `四個魔法材料罐都要各選一種，才能施展完整的擴寫魔法喔！` };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+      appState.stage3Locked = true;
+      markStageComplete(3);
+      transientFeedback = {
+        type: `success`,
+        message: `施法成功！平凡的「我吃鬆餅」已經華麗變身成超有畫面感的長句，獲得材料③「比喻魔法糖漿」！`
+      };
+      saveState();
+      renderAll();
+    }
+
+    function renderStage3() {
+      const done = appState.completedStages.includes(3);
+      const c = appState.stage3Choices;
+      const allPicked = c.timeMood !== null && c.actionSound !== null && c.senseTaste !== null && c.simile !== null;
+      const preview = getStage3ExpandedText();
+      const charCount = allPicked ? preview.full.length : 0;
+
+      const jarsHtml = Object.keys(STAGE3_JARS).map((jarKey) => {
+        const jar = STAGE3_JARS[jarKey];
+        const optsHtml = jar.options.map((optText, idx) => {
+          const isSel = c[jarKey] === idx;
+          return `
+            <button type="button" class="jar-option ${isSel ? `selected` : ``}" onclick="pickStage3Option('${jarKey}', ${idx})">
+              ${optText}
+            </button>
+          `;
+        }).join(``);
+        return `
+          <div class="jar-card">
+            <div class="jar-title">
+              <i data-lucide="${jar.icon}" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>${jar.title}</span>
+            </div>
+            ${optsHtml}
+          </div>
+        `;
+      }).join(``);
+
+      return `
+        <section class="stage-card">
+          <div class="stage-header">
+            <div>
+              <div class="kicker-pill">第三關 · 收集材料③ 比喻魔法糖漿</div>
+              <h2 class="stage-title">擴寫<em>修辭魔法</em>：把「我吃鬆餅」拉長！</h2>
+              <p class="stage-desc">只寫「我吃鬆餅」只有 4 個字，太單調了！請從下方 4 個魔法罐中各選一句材料，加入五感摹寫、動作細節與「像……一樣」的比喻修辭，讓句子變得立體又生動！</p>
+            </div>
+            <button type="button" class="btn btn-quiet" onclick="randomStage3Combo()">
+              <i data-lucide="wand-2" aria-hidden="true" style="width:16px;height:16px;"></i>
+              <span>幫我隨機搭配</span>
+            </button>
+          </div>
+
+          <div class="before-after-banner">
+            <div class="short-sentence-pill">
+              <div style="font-size:var(--label-size);color:var(--on-surface-variant);font-weight:700;">原本乾巴巴的短句（4字）</div>
+              <div style="font-size:1.35rem;font-weight:900;color:var(--on-surface);margin-top:4px;">「我吃鬆餅。」</div>
+            </div>
+            <div style="display:grid;place-items:center;color:var(--primary);">
+              <i data-lucide="arrow-right" aria-hidden="true" style="width:28px;height:28px;"></i>
+            </div>
+            <div class="expanded-preview-box">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:var(--label-size);font-weight:700;color:var(--on-surface-variant);">
+                <span>施展魔法後的擴寫長句</span>
+                <span style="color:var(--primary);">${allPicked ? `共 ${charCount} 個字（變長 ${Math.round(charCount / 4)} 倍！）` : `請選擇 4 種魔法材料`}</span>
+              </div>
+              <p style="margin:0;line-height:1.7;">
+                <span class="seg-time">${preview.t}</span><span class="seg-action">${preview.a}</span><span class="seg-sense">${preview.s}</span><span class="seg-simile">${preview.m}</span>
+              </p>
+            </div>
+          </div>
+
+          ${renderFeedbackHtml()}
+
+          <div class="jar-grid">${jarsHtml}</div>
+
+          <div style="display:flex;justify-content:center;">
+            <button type="button" class="btn btn-secondary" ${allPicked ? `` : `disabled`} onclick="lockStage3Spell()">
+              <i data-lucide="sparkles" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>${appState.stage3Locked ? `更新並保存我的擴寫魔法句` : `施展擴寫魔法（領取糖漿）`}</span>
+            </button>
+          </div>
+
+          <div class="stage-footer">
+            <button type="button" class="btn btn-quiet" onclick="goToStage(2)">
+              <i data-lucide="arrow-left" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>回上一關</span>
+            </button>
+            <button type="button" class="btn btn-primary" ${done ? `` : `disabled`} onclick="goToStage(4)">
+              <span>前往第四關：烹飪時間軸</span>
+              <i data-lucide="arrow-right" aria-hidden="true" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    // --- STAGE 4 HANDLERS ---
+    function selectStage4Card(cardId) {
+      const isPlaced = appState.stage4Order.includes(cardId);
+      if (isPlaced) return;
+      selectedStage4Card = selectedStage4Card === cardId ? null : cardId;
+      transientFeedback = null;
+      renderStage();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function placeStage4Slot(slotIdx) {
+      if (appState.stage4Order[slotIdx] !== null) {
+        // Click filled slot to remove card back to pool
+        appState.stage4Order[slotIdx] = null;
+        appState.stage4Verified = false;
+        transientFeedback = null;
+        saveState();
+        renderAll();
+        return;
+      }
+
+      if (!selectedStage4Card) {
+        // Auto-pick first available card if user clicks empty slot directly, or prompt
+        transientFeedback = { type: `info`, message: `請先點選左邊一張「故事過程卡片」，再點右邊的起／承／轉／合空格放進去喔！` };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      appState.stage4Order[slotIdx] = selectedStage4Card;
+      selectedStage4Card = null;
+      appState.stage4Verified = false;
+      transientFeedback = null;
+      saveState();
+      renderAll();
+    }
+
+    function verifyStage4Order() {
+      if (appState.stage4Order.some((id) => id === null)) {
+        transientFeedback = { type: `error`, message: `請先把 4 張故事卡片都排進【起、承、轉、合】的順序裡再檢查喔！` };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      const wrongIdx = appState.stage4Order.findIndex((cardId, idx) => {
+        const card = STAGE4_CARDS.find((c) => c.id === cardId);
+        return !card || card.correctRole !== idx;
+      });
+
+      if (wrongIdx === -1) {
+        appState.stage4Verified = true;
+        markStageComplete(4);
+        transientFeedback = {
+          type: `success`,
+          message: `順序完全正確！你掌握了「起 ➔ 承 ➔ 轉 ➔ 合」螺旋型時間邏輯，獲得材料④「時間火候計時器」！`
+        };
+      } else {
+        const role = STAGE4_ROLES[wrongIdx];
+        transientFeedback = {
+          type: `error`,
+          message: `第 ${wrongIdx + 1} 格「${role.badge}（${role.title}）」的卡片好像不太對喔！點一下已放入的卡片可以拿下來重排。`
+        };
+      }
+      saveState();
+      renderAll();
+    }
+
+    function renderStage4() {
+      const done = appState.completedStages.includes(4);
+      const placedIds = appState.stage4Order.filter((id) => id !== null);
+      const allPlaced = placedIds.length === 4;
+
+      const poolHtml = STAGE4_CARDS.map((card) => {
+        const isUsed = placedIds.includes(card.id);
+        const isSel = selectedStage4Card === card.id;
+        return `
+          <button type="button" class="story-card-btn ${isUsed ? `used` : ``} ${isSel ? `selected` : ``}"
+                  ${isUsed ? `disabled` : ``} onclick="selectStage4Card('${card.id}')">
+            ${card.text}
+          </button>
+        `;
+      }).join(``);
+
+      const slotsHtml = STAGE4_ROLES.map((role, idx) => {
+        const cardId = appState.stage4Order[idx];
+        const card = cardId ? STAGE4_CARDS.find((c) => c.id === cardId) : null;
+        return `
+          <button type="button" class="timeline-slot ${card ? `filled` : ``} ${appState.stage4Verified ? `correct` : ``}" onclick="placeStage4Slot(${idx})">
+            <span class="slot-badge">${role.badge} · ${role.title}</span>
+            <span style="text-align:left;font-weight:${card ? `500` : `700`};color:${card ? `var(--on-surface)` : `var(--on-surface-variant)`};">
+              ${card ? card.text : `點擊放入對應這個階段的故事卡片`}
+            </span>
+            <span style="font-size:var(--label-size);color:var(--on-surface-variant);">
+              ${card ? (appState.stage4Verified ? `✓ 正確` : `點此移出`) : `＋`}
+            </span>
+          </button>
+        `;
+      }).join(``);
+
+      // Clockwise spiral indicator colors using CSS vars
+      const s0 = appState.stage4Order[0] ? `var(--primary)` : `var(--surface-container-high)`;
+      const s1 = appState.stage4Order[1] ? `var(--secondary)` : `var(--surface-container-high)`;
+      const s2 = appState.stage4Order[2] ? `var(--tertiary)` : `var(--surface-container-high)`;
+      const s3 = appState.stage4Order[3] ? `var(--positive)` : `var(--surface-container-high)`;
+
+      return `
+        <section class="stage-card">
+          <div class="stage-header">
+            <div>
+              <div class="kicker-pill">第四關 · 收集材料④ 時間火候計時器</div>
+              <h2 class="stage-title">烹飪<em>時間軸</em>：螺旋型思考排排隊</h2>
+              <p class="stage-desc">寫整篇文章時，要改用「螺旋型思考」，依照時間順時針排列【起 ➔ 承 ➔ 轉 ➔ 合】四個段落！請點選左邊的故事卡片，依序放進右邊的時間軸格子裡。</p>
+            </div>
+          </div>
+
+          ${renderFeedbackHtml()}
+
+          <div class="spiral-layout">
+            <div class="spiral-diagram-card">
+              <div class="jar-title">
+                <i data-lucide="clock" aria-hidden="true" style="width:18px;height:18px;"></i>
+                <span>順時針「起承轉合」螺旋圖</span>
+              </div>
+              <svg width="210" height="170" viewBox="0 0 210 170" aria-hidden="true">
+                <path d="M55 45 H155 V125 H55" fill="none" stroke="var(--outline-variant)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="55" cy="45" r="24" fill="${s0}"/>
+                <text x="55" y="50" text-anchor="middle" fill="var(--on-primary)" font-size="14" font-weight="900">1.起</text>
+                <circle cx="155" cy="45" r="24" fill="${s1}"/>
+                <text x="155" y="50" text-anchor="middle" fill="var(--on-primary)" font-size="14" font-weight="900">2.承</text>
+                <circle cx="155" cy="125" r="24" fill="${s2}"/>
+                <text x="155" y="130" text-anchor="middle" fill="var(--on-primary)" font-size="14" font-weight="900">3.轉</text>
+                <circle cx="55" cy="125" r="24" fill="${s3}"/>
+                <text x="55" y="130" text-anchor="middle" fill="var(--on-primary)" font-size="14" font-weight="900">4.合</text>
+              </svg>
+
+              <div style="width:100%;text-align:left;display:grid;gap:var(--space-sm);">
+                <div style="font-weight:800;font-size:var(--label-size);color:var(--on-surface);">待排序的故事過程卡（點選一張）：</div>
+                <div class="story-cards-pool">${poolHtml}</div>
+              </div>
+            </div>
+
+            <div class="timeline-slots">
+              ${slotsHtml}
+              <div style="display:flex;justify-content:center;padding-top:var(--space-sm);">
+                <button type="button" class="btn btn-secondary" ${allPlaced ? `` : `disabled`} onclick="verifyStage4Order()">
+                  <i data-lucide="check-circle-2" aria-hidden="true" style="width:18px;height:18px;"></i>
+                  <span>檢查時間軸順序</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stage-footer">
+            <button type="button" class="btn btn-quiet" onclick="goToStage(3)">
+              <i data-lucide="arrow-left" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>回上一關</span>
+            </button>
+            <button type="button" class="btn btn-primary" ${done ? `` : `disabled`} onclick="goToStage(5)">
+              <span>前往第五關：篇章大組裝</span>
+              <i data-lucide="arrow-right" aria-hidden="true" style="width:18px;height:18px;"></i>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    // --- STAGE 5 HANDLERS ---
+    function setActiveBlank(blankIdx) {
+      activeStage5Blank = blankIdx;
+      renderStage();
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function pickStage5Connector(connId) {
+      // If blank already filled with this or another, overwrite active blank
+      appState.stage5Connectors[activeStage5Blank] = connId;
+      appState.stage5Verified = false;
+      transientFeedback = null;
+
+      // Advance active blank to next unfilled blank
+      const nextEmpty = appState.stage5Connectors.findIndex((val) => val === null);
+      if (nextEmpty !== -1) {
+        activeStage5Blank = nextEmpty;
+      }
+      saveState();
+      renderAll();
+    }
+
+    function verifyStage5Essay() {
+      if (appState.stage5Connectors.some((id) => id === null)) {
+        transientFeedback = { type: `error`, message: `還有段落轉折格子還沒填入銜接詞喔！請點選空格並補滿 4 個銜接詞。` };
+        renderStage();
+        if (window.lucide) window.lucide.createIcons();
+        return;
+      }
+
+      const expected = [`c1`, `c2`, `c3`, `c4`];
+      const wrongIdx = appState.stage5Connectors.findIndex((id, idx) => id !== expected[idx]);
+      if (wrongIdx === -1) {
+        appState.stage5Verified = true;
+        markStageComplete(5);
+        transientFeedback = {
+          type: `success`,
+          message: `太厲害了！四個段落銜接流暢又生動，你成功收集第⑤樣材料「銜接金湯匙」，可以領取典藏證書囉！`
+        };
+      } else {
+        transientFeedback = {
+          type: `error`,
+          message: `第 ${wrongIdx + 1} 個段落的銜接詞讀起來有點卡卡的喔！點一下該空格，再換一個更順暢的連接詞試試看！`
+        };
+      }
+      saveState();
+      renderAll();
+    }
+
+    function toggleSelfCheck(idx) {
+      appState.selfChecks[idx] = !appState.selfChecks[idx];
+      saveState();
+    }
+
+    function getStage5EssayPlain() {
+      const expanded = appState.stage3Locked
+        ? getStage3ExpandedText().full
+        : `忙了一整節課，我既期待又興奮地拿起叉子，切下還在烤盤邊滋滋作響的鬆餅，金黃誘人的餅皮立刻散發濃郁奶油香，吃起來外酥內軟，簡直像雲朵一樣綿密鬆軟，讓我幸福得瞇起眼睛！`;
+
+      const c0 = STAGE5_CONNECTORS.find((c) => c.id === appState.stage5Connectors[0]);
+      const c1 = STAGE5_CONNECTORS.find((c) => c.id === appState.stage5Connectors[1]);
+      const c2 = STAGE5_CONNECTORS.find((c) => c.id === appState.stage5Connectors[2]);
+      const c3 = STAGE5_CONNECTORS.find((c) => c.id === appState.stage5Connectors[3]);
+
+      const p1 = `今天是一年一度最令人期待的烹飪課。老師${c0 ? c0.shortA : `（　）`}宣布這節課要手作鬆餅，全班${c0 ? c0.shortB : `（　）`}開心地歡呼起來。我們這組立刻分工合作，有人打蛋、有人過篩麵粉，大家忙得不亦樂乎。`;
+      const p2 = `把金黃麵糊倒進烤盤後，鍋面立刻滋滋作響，教室裡冒出淡淡的白煙。輪到我握著鍋鏟翻面時，心裡${c1 ? c1.shortA : `（　）`}期待${c1 ? c1.shortB : `（　）`}緊張，生怕一不小心就把香噴噴的鬆餅烤焦了。`;
+      const p3 = `${c2 ? c2.shortA : `（請選段落轉折句）`}，金黃誘人的鬆餅終於擺上餐盤！${expanded}`;
+      const p4 = `大家圍在一起分享這盤熱騰騰的點心，教室裡充滿了歡呼與笑聲。這堂課${c3 ? c3.shortA : `（　）`}讓我們學會了團隊合作，${c3 ? c3.shortB : `（　）`}在心裡留下了最幸福的美味記憶。`;
+      return { p1, p2, p3, p4, fullText: `${p1}\n\n${p2}\n\n${p3}\n\n${p4}`, charCount: (p1 + p2 + p3 + p4).length };
+    }
+
+    function renderStage5() {
+      const done = appState.completedStages.includes(5);
+      const essay = getStage5EssayPlain();
+
+      const getBlankDisplay = (idx, part) => {
+        const cid = appState.stage5Connectors[idx];
+        const conn = STAGE5_CONNECTORS.find((c) => c.id === cid);
+        if (!conn) return `點選第 ${idx + 1} 格`;
+        if (part === `A`) return conn.shortA;
+        return conn.shortB || conn.shortA;
+      };
+
+      const blankCls = (idx) => {
+        const filled = appState.stage5Connectors[idx] !== null;
+        const active = activeStage5Blank === idx;
+        return `blank-btn ${active ? `active-blank` : ``} ${filled ? `filled` : ``} ${appState.stage5Verified ? `correct` : ``}`;
+      };
+
+      const pillsHtml = STAGE5_CONNECTORS.map((conn) => {
+        const isUsed = appState.stage5Connectors.includes(conn.id);
+        return `
+          <button type="button" class="word-chip ${isUsed ? `used` : ``}" onclick="pickStage5Connector('${conn.id}')">
+            ${conn.text}
+          </button>
+        `;
+      }).join(``);
+
+      const expanded = appState.stage3Locked
+        ? getStage3ExpandedText().full
+        : `忙了一整節課，我既期待又興奮地拿起叉子，切下還在烤盤邊滋滋作響的鬆餅，金黃誘人的餅皮立刻散發濃郁奶油香，吃起來外酥內軟，簡直像雲朵一樣綿密鬆軟，讓我幸福得瞇起眼睛！`;
+
+      const checkLabels = [
+        `我已經出聲朗讀過這篇文章，確定句子通順不卡詞！`,
+        `我檢查過段落中的「視覺、聽覺、嗅味覺、動作」都很清楚！`,
+        `我確認過標點符號（逗號、句號、驚嘆號）都有正確加上！`
+      ];
+
+      return `
+        <section class="stage-card">
+          <div class="stage-header">
+            <div>
+              <div class="kicker-pill">第五關 · 收集材料⑤ 銜接金湯匙</div>
+              <h2 class="stage-title">篇章<em>大組裝</em>：填入過渡銜接詞</h2>
+              <p class="stage-desc">最後一關！我們把前面四關的中間格、五感詞彙、擴寫魔法句和起承轉合組裝成完整的《美味的一堂課》！請點選文章裡的空格，再從下方挑選最適合的過渡銜接詞。</p>
+            </div>
+          </div>
+
+          ${renderFeedbackHtml()}
+
+          <div class="word-bank">
+            <div class="jar-title">
+              <i data-lucide="wand-2" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>過渡銜接詞魔法庫（目前編輯：第 ${activeStage5Blank + 1} 格）</span>
+            </div>
+            <div class="word-chips">${pillsHtml}</div>
+          </div>
+
+          <article class="essay-paper">
+            <h3 class="essay-title">美味的一堂課</h3>
+
+            <p class="essay-para">
+              <strong>【起】</strong>今天是一年一度最令人期待的烹飪課。老師
+              <button type="button" class="${blankCls(0)}" onclick="setActiveBlank(0)">${getBlankDisplay(0, `A`)}</button>
+              宣布這節課要手作鬆餅，全班
+              <button type="button" class="${blankCls(0)}" onclick="setActiveBlank(0)">${appState.stage5Connectors[0] ? getBlankDisplay(0, `B`) : `點選第 1 格`}</button>
+              開心地歡呼起來。我們這組立刻分工合作，有人打蛋、有人過篩麵粉，大家忙得不亦樂乎。
+            </p>
+
+            <p class="essay-para">
+              <strong>【承】</strong>把金黃麵糊倒進烤盤後，鍋面立刻滋滋作響，教室裡冒出淡淡的白煙。輪到我握著鍋鏟翻面時，心裡
+              <button type="button" class="${blankCls(1)}" onclick="setActiveBlank(1)">${getBlankDisplay(1, `A`)}</button>
+              期待
+              <button type="button" class="${blankCls(1)}" onclick="setActiveBlank(1)">${appState.stage5Connectors[1] ? getBlankDisplay(1, `B`) : `點選第 2 格`}</button>
+              緊張，生怕一不小心就把香噴噴的鬆餅烤焦了。
+            </p>
+
+            <p class="essay-para">
+              <strong>【轉】</strong>
+              <button type="button" class="${blankCls(2)}" onclick="setActiveBlank(2)">${getBlankDisplay(2, `A`)}</button>，
+              金黃誘人的鬆餅終於擺上餐盤！<span style="color:var(--primary);font-weight:700;">${expanded}</span>
+            </p>
+
+            <p class="essay-para">
+              <strong>【合】</strong>大家圍在一起分享這盤熱騰騰的點心，教室裡充滿了歡呼與笑聲。這堂課
+              <button type="button" class="${blankCls(3)}" onclick="setActiveBlank(3)">${getBlankDisplay(3, `A`)}</button>
+              讓我們學會了團隊合作，
+              <button type="button" class="${blankCls(3)}" onclick="setActiveBlank(3)">${appState.stage5Connectors[3] ? getBlankDisplay(3, `B`) : `點選第 4 格`}</button>
+              在心裡留下了最幸福的美味記憶。
+            </p>
+
+            <div style="text-align:right;font-weight:700;color:var(--on-surface-variant);font-size:var(--label-size);">
+              總字數約 ${essay.charCount} 字（達成 250–350 字四年級篇章目標！）
+            </div>
+          </article>
+
+          <div class="checklist-box">
+            <div style="font-weight:800;color:var(--secondary);">小廚師出聲朗讀自查表（課堂自評）：</div>
+            ${checkLabels.map((lbl, idx) => `
+              <label class="check-item">
+                <input type="checkbox" ${appState.selfChecks[idx] ? `checked` : ``} onchange="toggleSelfCheck(${idx})">
+                <span>${lbl}</span>
+              </label>
+            `).join(``)}
+          </div>
+
+          <div style="display:flex;justify-content:center;">
+            <button type="button" class="btn btn-secondary" onclick="verifyStage5Essay()">
+              <i data-lucide="sparkles" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>檢查篇章並領取「銜接金湯匙」</span>
+            </button>
+          </div>
+
+          <div class="stage-footer">
+            <button type="button" class="btn btn-quiet" onclick="goToStage(4)">
+              <i data-lucide="arrow-left" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>回上一關</span>
+            </button>
+            <button type="button" class="btn btn-positive" ${done ? `` : `disabled`} onclick="goToStage(6)">
+              <i data-lucide="award" aria-hidden="true" style="width:18px;height:18px;"></i>
+              <span>領取美味擴寫大師典藏證書</span>
+            </button>
+          </div>
+        </section>
+      `;
+    }
+
+    // --- STAGE 6: MASTER CERTIFICATE ---
+    function downloadEssayTxt() {
+      const chefName = appState.studentName || `小小寫作魔法師`;
+      const essay = getStage5EssayPlain();
+      const content = `《美味寫作魔法師：文句擴寫五關闖關遊戲》學習成果典藏\n` +
+        `==================================================\n` +
+        `小廚師姓名：${chefName}\n` +
+        `魔法得分：${calculateScore()} / 250 魔法星\n` +
+        `完成關卡：${appState.completedStages.length} / 5 關\n` +
+        `日期：2026 年 11 月 21 日\n\n` +
+        `【我的完成篇章：美味的一堂課】\n\n` +
+        `${essay.fullText}\n`;
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content: content,
+          contentType: `text/plain`,
+          encoding: `UTF-8`,
+          filename: `美味的一堂課_${chefName}_寫作篇章.txt`
+        });
+      }
+    }
+
+    function downloadCertificatePng() {
+      const canvas = document.createElement(`canvas`);
+      canvas.width = 1200;
+      canvas.height = 800;
+      const ctx = canvas.getContext(`2d`);
+      if (!ctx) return;
+
+      const styles = getComputedStyle(document.documentElement);
+      const bg = styles.getPropertyValue(`--background`).trim();
+      const white = styles.getPropertyValue(`--surface-container-low`).trim();
+      const pink = styles.getPropertyValue(`--primary`).trim();
+      const grape = styles.getPropertyValue(`--secondary`).trim();
+      const ink = styles.getPropertyValue(`--on-surface`).trim();
+      const softPink = styles.getPropertyValue(`--surface-container`).trim();
+
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1200, 800);
+
+      ctx.fillStyle = white;
+      ctx.strokeStyle = pink;
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.roundRect(48, 48, 1104, 704, 36);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = softPink;
+      ctx.beginPath();
+      ctx.roundRect(90, 90, 1020, 620, 24);
+      ctx.fill();
+
+      ctx.textAlign = `center`;
+      ctx.fillStyle = grape;
+      ctx.font = `bold 28px "Noto Sans TC", sans-serif`;
+      ctx.fillText(`國小四年級《美味的一堂課》九宮格寫作冒險`, 600, 165);
+
+      ctx.fillStyle = ink;
+      ctx.font = `900 54px "Noto Sans TC", sans-serif`;
+      ctx.fillText(`美味擴寫大師典藏證書`, 600, 240);
+
+      const chefName = appState.studentName || `小小寫作魔法師`;
+      ctx.fillStyle = pink;
+      ctx.font = `900 62px "Noto Sans TC", sans-serif`;
+      ctx.fillText(chefName, 600, 355);
+
+      ctx.fillStyle = ink;
+      ctx.font = `500 28px "Noto Sans TC", sans-serif`;
+      ctx.fillText(`順利通過五道文句擴寫關卡，集齊五大美味魔法材料，`, 600, 440);
+      ctx.fillText(`成功將「我吃鬆餅」擴寫成色香味俱全的美食篇章！`, 600, 490);
+
+      ctx.fillStyle = grape;
+      ctx.font = `bold 32px "Noto Sans TC", sans-serif`;
+      ctx.fillText(`魔法總積分：${calculateScore()} / 250 魔法星`, 600, 580);
+
+      ctx.fillStyle = ink;
+      ctx.font = `500 24px "Noto Sans TC", sans-serif`;
+      ctx.fillText(`頒發日期：2026 年 11 月 21 日 · 美味寫作魔法學院`, 600, 650);
+
+      const dataUrl = canvas.toDataURL(`image/png`);
+      const base64 = dataUrl.split(`,`)[1] || ``;
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content: base64,
+          contentType: `image/png`,
+          encoding: `base64`,
+          filename: `美味擴寫大師典藏證書_${chefName}.png`
+        });
+      }
+    }
+
+    function renderStage6() {
+      const chefName = appState.studentName || `小小寫作魔法師`;
+      const allDone = appState.completedStages.length === 5;
+      const expanded = appState.stage3Locked ? getStage3ExpandedText().full : `尚未在第三關施展擴寫魔法`;
+
+      if (!allDone) {
+        const missing = INGREDIENTS.filter((i) => !appState.completedStages.includes(i.id));
+        return `
+          <section class="stage-card">
+            <h2 class="stage-title">典藏證書尚未解鎖（已完成 ${appState.completedStages.length} / 5 關）</h2>
+            <p class="stage-desc">還差一點點就集齊 5 樣魔法材料囉！請先完成下面還未闖過的關卡：</p>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-sm);">
+              ${missing.map((m) => `
+                <button type="button" class="btn btn-primary" onclick="goToStage(${m.id})">
+                  <span>前往第 ${m.id} 關：${m.stageTitle}</span>
+                  <i data-lucide="arrow-right" aria-hidden="true" style="width:16px;height:16px;"></i>
+                </button>
+              `).join(``)}
+            </div>
+          </section>
+        `;
+      }
+
+      return `
+        <section class="stage-card">
+          <div class="cert-frame">
+            <div class="cert-ribbon">
+              <i data-lucide="award" aria-hidden="true" style="width:20px;height:20px;"></i>
+              <span>榮譽認證 · 五關全數通關</span>
+            </div>
+            <h2 class="stage-title" style="margin:0;">美味擴寫大師典藏證書</h2>
+            <p style="margin:0;color:var(--on-surface-variant);">茲證明寫作小廚師</p>
+            <p class="cert-recipient">${chefName}</p>
+            <p style="margin:0 auto;max-width:56ch;">
+              於國小四年級《美味的一堂課》九宮格寫作冒險中，精準鎖定中間格、靈活運用五感雷達、施展比喻修辭擴寫魔法、完成起承轉合時間軸排序，並成功組裝完整美食篇章，獲得 <strong>${calculateScore()} / 250 魔法星</strong>！
+            </p>
+
+            <div class="cert-quote-box">
+              <div style="font-weight:800;font-size:var(--label-size);color:var(--secondary);margin-bottom:var(--space-xs);">
+                代表作品亮點（由「我吃鬆餅」魔法擴寫而成）：
+              </div>
+              <div style="font-weight:700;color:var(--on-surface);">「${expanded}」</div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-md);">
+              <button type="button" class="btn btn-primary" onclick="downloadCertificatePng()">
+                <i data-lucide="download" aria-hidden="true" style="width:18px;height:18px;"></i>
+                <span>下載典藏證書圖卡 (.png)</span>
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="downloadEssayTxt()">
+                <i data-lucide="book-open" aria-hidden="true" style="width:18px;height:18px;"></i>
+                <span>下載我的美味篇章 (.txt)</span>
+              </button>
+            </div>
+
+            <div style="font-size:var(--label-size);color:var(--on-surface-variant);">
+              頒發日期：2026 年 11 月 21 日 · 美味寫作魔法學院
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderStage() {
+      const container = document.getElementById(`stage-container`);
+      if (!container) return;
+
+      let html = ``;
+      switch (appState.currentStage) {
+        case 1: html = renderStage1(); break;
+        case 2: html = renderStage2(); break;
+        case 3: html = renderStage3(); break;
+        case 4: html = renderStage4(); break;
+        case 5: html = renderStage5(); break;
+        case 6: html = renderStage6(); break;
+        default: html = renderStage1();
+      }
+      container.innerHTML = html;
+    }
+
+    function renderAll() {
+      renderHeaderStats();
+      renderStepper();
+      renderStage();
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+
+    function handleResetGame(btn) {
+      if (btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        const span = btn.querySelector(`span`);
+        if (span) span.textContent = `再點一次確認重置進度`;
+        setTimeout(() => {
+          if (btn.dataset.armed === `true`) {
+            btn.dataset.armed = `false`;
+            const s = btn.querySelector(`span`);
+            if (s) s.textContent = `重新開始冒險`;
+          }
+        }, 4000);
+        return;
+      }
+
+      btn.dataset.armed = `false`;
+      const span = btn.querySelector(`span`);
+      if (span) span.textContent = `重新開始冒險`;
+
+      appState = cloneState(DEFAULT_STATE);
+      selectedStage2Card = null;
+      selectedStage4Card = null;
+      activeStage5Blank = 0;
+      transientFeedback = { type: `info`, message: `已經幫你把廚房整理乾淨囉，一起重新展開美味寫作冒險吧！` };
+      saveState();
+      renderAll();
+    }
+
+    async function initApp() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+        try {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && typeof saved === `object`) {
+            appState = Object.assign(cloneState(DEFAULT_STATE), saved);
+            if (!Array.isArray(appState.completedStages)) appState.completedStages = [];
+            if (!Array.isArray(appState.stage1Choices)) appState.stage1Choices = [null, null, null, null];
+            if (!appState.stage2Placements || typeof appState.stage2Placements !== `object`) appState.stage2Placements = {};
+            if (!appState.stage3Choices || typeof appState.stage3Choices !== `object`) appState.stage3Choices = cloneState(DEFAULT_STATE.stage3Choices);
+            if (!Array.isArray(appState.stage4Order)) appState.stage4Order = [null, null, null, null];
+            if (!Array.isArray(appState.stage5Connectors)) appState.stage5Connectors = [null, null, null, null];
+            if (!Array.isArray(appState.selfChecks)) appState.selfChecks = [false, false, false];
+          }
+        } catch (err) {
+          console.error(`Failed to load saved state`, err);
+        }
+      }
+
+      renderAll();
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    document.addEventListener(`DOMContentLoaded`, initApp);
+  </script>
+</body>
+</html>
